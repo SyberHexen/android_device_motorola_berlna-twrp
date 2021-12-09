@@ -13,6 +13,9 @@ PRODUCT_SHIPPING_API_LEVEL := 30
 #VNDK API
 PRODUCT_TARGET_VNDK_VERSION := 31
 
+# define hardware platform
+PRODUCT_PLATFORM := lahaina
+
 # Enable project quotas and casefolding for emulated storage without sdcardfs
 $(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
 
@@ -49,13 +52,11 @@ PRODUCT_PACKAGES_DEBUG += \
 
 # Boot control HAL
 PRODUCT_PACKAGES += \
-    android.hardware.boot@1.1-impl \
+    android.hardware.boot@1.1-impl-qti \
+    android.hardware.boot@1.1-impl-qti.recovery \
     android.hardware.boot@1.1-service \
-    android.hardware.boot@1.1-impl-wrapper.recovery \
-    android.hardware.boot@1.1-impl-wrapper \
-    android.hardware.boot@1.1-impl.recovery \
-    bootctrl.lahaina \
-    bootctrl.lahaina.recovery
+    bootctrl.$(PRODUCT_PLATFORM) \
+    bootctrl.$(PRODUCT_PLATFORM).recovery
 
 # fastbootd
 PRODUCT_PACKAGES += \
@@ -69,7 +70,6 @@ TARGET_SCREEN_WIDTH := 1080
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
     $(LOCAL_PATH) \
-    hardware/qcom-caf/bootctrl \
     vendor/qcom/opensource/commonsys-intf/display
 
 # Crypto
@@ -89,6 +89,7 @@ PRODUCT_PACKAGES += \
 TW_LOAD_VENDOR_MODULES := "adsp_loader_dlkm.ko qpnp_adaptive_charge.ko sensors_class.ko moto_f_usbnet.ko mmi_sys_temp.ko mmi_info.ko mmi_annotate.ko goodix_brl_mmi.ko mmi_charger.ko mpq-adapter.ko touchscreen_mmi.ko utags.ko"
 
 TARGET_RECOVERY_DEVICE_MODULES += \
+    bootctrl.$(PRODUCT_PLATFORM).recovery \
     libdisplayconfig.qti \
     libion \
     libxml2 \
